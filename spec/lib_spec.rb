@@ -14,6 +14,7 @@ describe 'row_to_hash' do
       color: '1',
       space_prefix: 'に',
       space_num: '15',
+      space_suffix: 'b',
       circle_name: 'Happa',
       author_name: 'おーみや',
       url: '',
@@ -36,6 +37,7 @@ describe 'a_to_hash' do
       color: '1',
       space_prefix: 'Ａ',
       space_num: '1',
+      space_suffix: 'a',
       circle_name: 'おでんランチ。',
       author_name: 'あむぱか',
       url: 'http://pixiv.me/otuok_panda_mp',
@@ -45,6 +47,7 @@ describe 'a_to_hash' do
       color: '1',
       space_prefix: 'Ａ',
       space_num: '27',
+      space_suffix: 'a',
       circle_name: 'スタヂオK-ing',
       author_name: '',
       url: 'http://www.sam.hi-ho.ne.jp/kimura/'

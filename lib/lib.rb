@@ -13,6 +13,7 @@ def row_to_hash(row)
     when 10; { circle_name: col }
     when 12; { author_name: col }
     when 14; { url: col }
+    when 21; { space_suffix: case col; when '0'; 'a'; when '1'; 'b'; end }
     when 23; { circle_ms_url: col }
     when 26; { twitter_url: col }
     when 27; { pixiv_url: col }
