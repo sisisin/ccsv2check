@@ -23,8 +23,15 @@ function parse(rawCsv) {
   const rows = rawCsv.split('\r\n').map(row => row.split(','))
   const header = new Header(rows.find(row => row.indexOf('Header') === 0))
 
-  const colors = rows.filter(row => row.indexOf('Color') === 0)
-    .map(row => new Color(Number(row[1]), row[2]))
+  const colors = (() => {
+    const entries = rows
+      .filter(row => row.indexOf('Color') === 0)
+      .map(row => {
+        const c = new Color(Number(row[1]), row[2], row[4]);
+        return [c.colorNumber, c];
+      });
+    return new Map(entries);
+  })()
 
   const circles = rows.filter(row => row.indexOf('Circle') === 0)
     .map(row => Circle.parse(row))
@@ -35,9 +42,13 @@ function parse(rawCsv) {
   return { header, colors, circles, unknowns }
 }
 
-function toRenderString({ circles }) {
-  return 'color,space_prefix,space_num,space_suffix,circle_name,author_name,url,circle_ms_url\n' +
-    circles.map(c => c.toCsvString()).join('\n')
+function toRenderString({ circles, colors }) {
+  return 'color,pre,num,suf,name,author,url,circle_ms_url\n' +
+    circles.map(c => toCsvString(c)).join('\n')
+
+  function toCsvString(circle) {
+    return [colors.get(circle.colorNumber).colorName, circle.spacePrefix, circle.spaceNum, circle.spaceSuffix, circle.circleName, circle.authorName, circle.url, circle.circleMsUrl].join(',');
+  }
 }
 
 class Row { }
@@ -49,17 +60,18 @@ class Header extends Row {
 }
 
 class Color extends Row {
-  constructor(colorNumber, colorCode) {
+  constructor(colorNumber, colorCode, colorName) {
     super()
     this.colorNumber = colorNumber
     this.colorCode = colorCode
+    this.colorName = colorName
   }
 }
 
 class CircleData extends Row {
   static parse(arr) {
     const arg = {
-      colorNumber: arr[2],
+      colorNumber: Number(arr[2]),
       spacePrefix: arr[7],
       spaceNum: arr[8],
       circleName: arr[10],
@@ -88,10 +100,6 @@ class CircleData extends Row {
     this.circleMsUrl = circleMsUrl
     this.twitterUrl = twitterUrl
     this.pixivUrl = pixivUrl
-  }
-
-  toCsvString() {
-    return [this.colorNumber, this.spacePrefix, this.spaceNum, this.spaceSuffix, this.circleName, this.authorName, this.url, this.circleMsUrl].join(',')
   }
 }
 
