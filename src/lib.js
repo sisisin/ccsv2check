@@ -43,11 +43,11 @@ function parse(rawCsv) {
 }
 
 function toRenderString({ circles, colors }) {
-  return 'color,pre,num,suf,name,author,url,circle_ms_url\n' +
+  return 'color,pre,num,suf,name,author,url,circle_ms_url,memo\n' +
     circles.map(c => toCsvString(c)).join('\n')
 
   function toCsvString(circle) {
-    return [colors.get(circle.colorNumber).colorName, circle.spacePrefix, circle.spaceNum, circle.spaceSuffix, circle.circleName, circle.authorName, circle.url, circle.circleMsUrl].join(',');
+    return [colors.get(circle.colorNumber).colorName, circle.spacePrefix, circle.spaceNum, circle.spaceSuffix, circle.circleName, circle.authorName, circle.url, circle.circleMsUrl, circle.memo].join(',');
   }
 }
 
@@ -77,6 +77,7 @@ class CircleData extends Row {
       circleName: arr[10],
       authorName: arr[12],
       url: arr[14],
+      memo: arr[17],
       spaceSuffix: arr[21] === '0' ? 'a' : 'b',
       circleMsUrl: arr[23],
       twitterUrl: arr[26],
@@ -87,7 +88,7 @@ class CircleData extends Row {
 
   constructor({
     colorNumber, spacePrefix, spaceNum, circleName, authorName,
-    url, spaceSuffix, circleMsUrl, twitterUrl, pixivUrl
+    url, memo, spaceSuffix, circleMsUrl, twitterUrl, pixivUrl
   }) {
     super()
     this.colorNumber = colorNumber
@@ -96,6 +97,7 @@ class CircleData extends Row {
     this.circleName = circleName
     this.authorName = authorName
     this.url = url
+    this.memo = memo
     this.spaceSuffix = spaceSuffix
     this.circleMsUrl = circleMsUrl
     this.twitterUrl = twitterUrl
