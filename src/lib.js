@@ -28,11 +28,14 @@ function parse(rawCsv) {
   const header = new Header(rows.find(row => row.indexOf('Header') === 0));
 
   const colors = (() => {
-    const entries = rows.filter(row => row.indexOf('Color') === 0).map(row => {
-      const c = new Color(Number(row[1]), row[2], row[4]);
-      return [c.colorNumber, c];
-    });
-    return new Map(entries);
+    const zero = [0, new Color(0, '000000', 'Not checked')];
+    const entries = rows
+      .filter(row => row.indexOf('Color') === 0)
+      .map(row => {
+        const c = new Color(Number(row[1]), row[2], row[4]);
+        return [c.colorNumber, c];
+      });
+    return new Map([zero, ...entries]);
   })();
 
   const circles = rows.filter(row => row.indexOf('Circle') === 0).map(row => Circle.parse(row));
@@ -45,7 +48,11 @@ function parse(rawCsv) {
 function toRenderString({ circles, colors }) {
   return (
     'color,pre,num,suf,name,author,url,circle_ms_url,memo\n' +
-    circles.map(c => toCsvString(c)).join('\n')
+    circles
+      .map(c => {
+        return toCsvString(c);
+      })
+      .join('\n')
   );
 
   function toCsvString(circle) {
